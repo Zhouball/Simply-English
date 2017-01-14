@@ -194,4 +194,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         //switchSearch(KWS_SEARCH);
     }
 
+    public void passAWord() {
+        t2sfrag.receiveWord(s2tfrag.sendWord()); //string looks like "word" all lowercase no spaces no punctuation
+    }
+
 }
