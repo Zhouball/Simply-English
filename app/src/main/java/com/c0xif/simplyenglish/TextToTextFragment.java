@@ -10,9 +10,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class TextToTextFragment extends Fragment {
 
-    private TextView text;
+    private TextView tv;
     private Button submit;
 
     public static TextToTextFragment newInstance() {
@@ -30,15 +32,17 @@ public class TextToTextFragment extends Fragment {
 
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                    
+                sendWords();
             }
         });
 
-        text = (TextView) view.findViewById(R.id.edit_text);
+        tv = (TextView) view.findViewById(R.id.edit_text);
         return view;
     }
 
-
+    public String[] sendWords() {
+        return MainActivity.parseText((String)tv.getText());
+    }
 
 }
 

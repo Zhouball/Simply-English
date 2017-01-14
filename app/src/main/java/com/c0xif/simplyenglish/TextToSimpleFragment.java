@@ -44,11 +44,11 @@ public class TextToSimpleFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_text_to_simple, container, false);
         LL = (LinearLayout) view.findViewById(R.id.simple_text_space);
         initUserPref();
-        recieveWord("Allen");
+        //receiveWord("Allen");
         return view;
     }
 
-    public void recieveWord(String word) {
+    public void receiveWord(String word) {
         String text = getUserPref(word);
 
         final Button textButton = new Button(this.getContext());

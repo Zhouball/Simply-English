@@ -32,7 +32,7 @@ public class SpeechToTextFragment extends Fragment {
         return true;
     }
 
-    public String sendWord() {
+    public String[] sendWords() {
         String raw = (String) tv.getText();
 
         int i = raw.indexOf(' ');
