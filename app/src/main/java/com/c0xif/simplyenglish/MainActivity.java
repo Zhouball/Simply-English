@@ -22,6 +22,9 @@ import edu.cmu.pocketsphinx.RecognitionListener;
 import edu.cmu.pocketsphinx.SpeechRecognizer;
 import edu.cmu.pocketsphinx.SpeechRecognizerSetup;
 
+import android.view.View;
+import android.widget.TextView;
+
 import static android.widget.Toast.makeText;
 
 public class MainActivity extends AppCompatActivity implements RecognitionListener{
@@ -38,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ((TextView) findViewById(R.id.caption_text)).setText("Preparing the recognizer");
+        //((TextView) findViewById(R.id.caption_text)).setText("Preparing the recognizer");
         // Check if user has given permission to record audio
         int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO);
         if (permissionCheck == PackageManager.PERMISSION_DENIED) {
@@ -67,9 +70,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             protected void onPostExecute(Exception result) {
                 if (result != null) {
-                    ((TextView) findViewById(R.id.caption_text)).setText("Failed to init recognizer " + result);
+                    //((TextView) findViewById(R.id.caption_text)).setText("Failed to init recognizer " + result);
                 } else {
-                    ((TextView) findViewById(R.id.caption_text)).setText("Listening");
+                    //((TextView) findViewById(R.id.caption_text)).setText("Listening");
                 }
             }
         }.execute();
@@ -110,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             return;
 
         String text = hypothesis.getHypstr();
-        ((TextView) findViewById(R.id.caption_text)).setText(text);
+        //((TextView) findViewById(R.id.caption_text)).setText(text);
     }
 
     /**
@@ -118,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
      */
     @Override
     public void onResult(Hypothesis hypothesis) {
-        ((TextView) findViewById(R.id.caption_text)).setText("");
+        //((TextView) findViewById(R.id.caption_text)).setText("");
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
             makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
@@ -173,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     @Override
     public void onError(Exception error) {
-        ((TextView) findViewById(R.id.caption_text)).setText(error.getMessage());
+        //((TextView) findViewById(R.id.caption_text)).setText(error.getMessage());
     }
 
 
@@ -185,4 +188,9 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
 
 
+    public void buttonClick(View v)
+    {
+        TextView tv = (TextView)findViewById(R.id.textView);
+        tv.setText("This reflects a change");
+    }
 }

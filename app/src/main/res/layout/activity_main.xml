@@ -9,37 +9,21 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.c0xif.simplyenglish.MainActivity">
 
-
-    <LinearLayout
-        android:orientation="vertical"
+    <fragment
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="160dp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:weightSum="1">
+        class="com.c0xif.simplyenglish.SpeechToTextFragment"
+        android:name="android.app.ListFragment"
+        android:id="@+id/fragment" />
 
-        <TextView
-            android:text="TextView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:id="@+id/caption_text"
-            android:layout_weight="1" />
+    <fragment
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_alignParentBottom="true"
+        class="com.c0xif.simplyenglish.TextToSimpleFragment"
+        android:name="android.app.ListFragment"
+        android:id="@+id/fragment_bottom"
+        android:layout_gravity="center_horizontal" />
 
-        <fragment
-            android:layout_width="match_parent"
-            android:name="android.app.ListFragment"
-            android:id="@+id/fragment"
-            android:layout_weight="1"
-            android:layout_height="0dp"/>
-
-        <fragment
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:name="android.app.ListFragment"
-            android:id="@+id/fragment2"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    
 </RelativeLayout>
