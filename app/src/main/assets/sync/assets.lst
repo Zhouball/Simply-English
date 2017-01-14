@@ -1,6 +1,6 @@
 cmudict-en-us.dict
-digits.gram
-en-phone.dmp
+en-70k-0.2-pruned.lm.bin
+en-70k-0.2.lm.bin
 en-us-ptm/README
 en-us-ptm/feat.params
 en-us-ptm/mdef
@@ -9,5 +9,3 @@ en-us-ptm/noisedict
 en-us-ptm/sendump
 en-us-ptm/transition_matrices
 en-us-ptm/variances
-menu.gram
-weather.dmp
