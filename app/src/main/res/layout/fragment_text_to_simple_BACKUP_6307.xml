@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/simple_text_space" >
+
+<<<<<<< HEAD
+=======
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Bottom Button"
+        android:id="@+id/button"/>
+>>>>>>> f332422824a8e522645c2479be6e6544d30ae796
+
+</LinearLayout>

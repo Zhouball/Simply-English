@@ -13,9 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:layout_alignParentTop="true"
+        class="com.c0xif.simplyenglish.SpeechToTextFragment"
         android:name="android.app.ListFragment"
-        android:id="@+id/fragment"
-        android:layout_weight="0.94" />
+        android:id="@+id/fragment" />
 
     <fragment
         android:layout_width="match_parent"
