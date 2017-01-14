@@ -11,6 +11,7 @@ import android.widget.TextView;
 public class SpeechToTextFragment extends Fragment {
 
     TextView tv;
+    StringBuffer actual;
 
     //public static SpeechToTextFragment newInstance() {
     //    return new SpeechToTextFragment();
@@ -24,25 +25,14 @@ public class SpeechToTextFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_speech_to_text, container, false);
         tv = (TextView)v.findViewById(R.id.speech2textBox);
+        actual = new StringBuffer("");
+
         return v;
     }
 
-    public boolean addText(String s) {
-        tv.setText(tv.getText() + s);
+    public boolean updateText(String s) {
+        tv.setText(s);
         return true;
     }
-
-    public String sendWord() {
-        String raw = (String) tv.getText();
-
-        int i = raw.indexOf(' ');
-        String word = raw.substring(0, i);
-        String rest = raw.substring(i);
-        tv.setText(rest.trim());
-        return word.replaceAll(".","").trim();
-    }
-
-
-
 }
 
