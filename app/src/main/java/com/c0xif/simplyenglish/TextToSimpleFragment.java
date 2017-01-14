@@ -4,7 +4,6 @@ package com.c0xif.simplyenglish;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.app.ActionBar;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Dictionary;
