@@ -30,18 +30,21 @@ import static android.widget.Toast.makeText;
 public class MainActivity extends AppCompatActivity implements RecognitionListener{
 
     /* Named searches allow to quickly reconfigure the decoder */
-    private static final String NGRAM_SEARCH = "forecast";
+    private static final String NGRAM_SEARCH = "recog";
 
     /* Used to handle permission request */
     private static final int PERMISSIONS_REQUEST_RECORD_AUDIO = 1;
 
     private SpeechRecognizer recognizer;
 
+    SpeechToTextFragment s2tfrag;
+    TextToSimpleFragment t2sfrag;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //((TextView) findViewById(R.id.caption_text)).setText("Preparing the recognizer");
+        //s2tfrag.addText("Preparing listener.");
         // Check if user has given permission to record audio
         int permissionCheck = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO);
         if (permissionCheck == PackageManager.PERMISSION_DENIED) {
@@ -49,6 +52,11 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             return;
         }
         runRecognizerSetup();
+
+        //getSupportFragmentManager().beginTransaction().replace(R.id.s2tFrag, new SpeechToTextFragment(),"s2tFrag").commit();
+        s2tfrag = ((SpeechToTextFragment) getSupportFragmentManager().findFragmentById(R.id.s2tFrag));
+        //getSupportFragmentManager().beginTransaction().replace(R.id.t2sFrag, new TextToSimpleFragment(),"t2sFrag").commit();
+        t2sfrag = ((TextToSimpleFragment) getSupportFragmentManager().findFragmentById(R.id.t2sFrag));
     }
 
     private void runRecognizerSetup() {
@@ -70,9 +78,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             @Override
             protected void onPostExecute(Exception result) {
                 if (result != null) {
-                    //((TextView) findViewById(R.id.caption_text)).setText("Failed to init recognizer " + result);
+                    makeText(getApplicationContext(), "Listener died", Toast.LENGTH_SHORT).show();
                 } else {
-                    //((TextView) findViewById(R.id.caption_text)).setText("Listening");
+                    makeText(getApplicationContext(), "Listener is on!", Toast.LENGTH_SHORT).show();
+                   // s2tfrag.addText("Listener is on");
                 }
             }
         }.execute();
@@ -112,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         if (hypothesis == null)
             return;
 
-        String text = hypothesis.getHypstr();
+        //String text = hypothesis.getHypstr();
         //((TextView) findViewById(R.id.caption_text)).setText(text);
     }
 
@@ -121,10 +130,10 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
      */
     @Override
     public void onResult(Hypothesis hypothesis) {
-        //((TextView) findViewById(R.id.caption_text)).setText("");
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
             makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+            s2tfrag.addText(text + ". ");
         }
     }
 
@@ -185,12 +194,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         //switchSearch(KWS_SEARCH);
     }
 
-
-
-
-    public void buttonClick(View v)
-    {
-        TextView tv = (TextView)findViewById(R.id.textView);
-        tv.setText("This reflects a change");
+    public void passAWord() {
+        t2sfrag.receiveWord(s2tfrag.sendWord()); //string looks like "word" all lowercase no spaces no punctuation
     }
+
 }
