@@ -196,14 +196,15 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     public void passAWord() {
 
+        t2sfrag.clear();
         for (String word:s2tfrag.sendWords()) {
             //TODO: Highlight the word as its being sent
             t2sfrag.receiveWord(word);
         }
     }
 
+
     static public String[] parseText(String s) {
         return s.replaceAll(".", "").split(" ");
     }
-
 }

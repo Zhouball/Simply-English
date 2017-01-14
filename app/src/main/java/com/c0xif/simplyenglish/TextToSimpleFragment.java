@@ -86,7 +86,7 @@ public class TextToSimpleFragment extends Fragment {
 
     }
 
-    public void initUserPref() {
+    private void initUserPref() {
         if (UserPreferences == null)
             UserPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
 
@@ -94,10 +94,10 @@ public class TextToSimpleFragment extends Fragment {
             Log.d(TAG, "Error Loading User Preferences");
     }
 
-    public void closeUserPref() {
+    private void closeUserPref() {
     }
 
-    public String getUserPref(String key) {
+    private String getUserPref(String key) {
         if (UserPreferences == null) {
             Log.d(TAG, "You must initialize the User Preferences first");
             return key;
@@ -106,7 +106,7 @@ public class TextToSimpleFragment extends Fragment {
         return UserPreferences.getString(key, key);
     }
 
-    public void storeUserPref(String key, String value) {
+    private void storeUserPref(String key, String value) {
         SharedPreferences.Editor editor = UserPreferences.edit();
         if (editor != null) {
             editor.putString(key, value);
@@ -114,6 +114,17 @@ public class TextToSimpleFragment extends Fragment {
         } else {
             Log.d(TAG, "Error when editing User Preferences");
         }
+    }
+
+    public void clear() {
+        /*Button[] buttons = getView().findViewById(simple_text);
+        Button[] buttonsCopy = buttons;
+        for (Button b: buttonsCopy) {
+            LL.removeAllViews();
+        }*/
+        LL.removeAllViews();
+        CurrentButton = null;
+
     }
 
     private String getWordFromSynonymList(ArrayList<String> synonyms, String currentWord) {
@@ -145,5 +156,7 @@ public class TextToSimpleFragment extends Fragment {
             storeUserPref(values.get(i), (String)bKey.getText());
         }
     }
+
+
 }
 
