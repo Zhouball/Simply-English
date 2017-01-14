@@ -19,19 +19,26 @@
         android:layout_alignParentStart="true"
         android:weightSum="1">
 
-        <fragment
+        <TextView
+            android:text="TextView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:name="android.app.ListFragment"
-            android:id="@+id/fragment"
-            android:layout_weight="0.94" />
+            android:layout_height="0dp"
+            android:id="@+id/caption_text"
+            android:layout_weight="1" />
 
         <fragment
             android:layout_width="match_parent"
-            android:layout_height="316dp"
+            android:name="android.app.ListFragment"
+            android:id="@+id/fragment"
+            android:layout_weight="1"
+            android:layout_height="0dp"/>
+
+        <fragment
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:name="android.app.ListFragment"
             android:id="@+id/fragment2"
-            android:layout_gravity="center_horizontal" />
+            android:layout_weight="1" />
     </LinearLayout>
 
     
