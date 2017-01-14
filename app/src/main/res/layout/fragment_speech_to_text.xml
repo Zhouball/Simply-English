@@ -7,5 +7,13 @@
         android:text="Top Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/button2" />
+        android:id="@+id/button2"
+        android:clickable="true"
+        android:onClick="buttonClick"/>
+
+    <TextView
+        android:text="Starting Text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView" />
 </LinearLayout>
