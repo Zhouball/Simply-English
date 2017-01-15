@@ -1,8 +1,19 @@
 package com.c0xif.simplyenglish;
 
+// For API GET request
 import java.util.ArrayList;
 import java.io.*;
 import java.net.*;
+
+// For XML parsing
+import java.io.File;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.DocumentBuilder;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
 
 public class ThesaurusAPI {
 
@@ -49,25 +60,28 @@ public class ThesaurusAPI {
         return result.toString();
     }
 
-    private ArrayList<String> parseXML(String xml){
-        // No reason to involve complicated libraries. Little dirty, but far more efficient.
-        String syn = xml.split("<syn>")[1];
-        syn = syn.split("</syn>")[0];
-        String[] synonyms = syn.split(" ");
+    private ArrayList<String> parseXML(String xml) throws Exception{
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        InputSource is = new InputSource(new StringReader(xml));
+        Document doc = builder.parse(is);
+        doc.getDocumentElement().normalize();
+        NodeList nList = doc.getElementsByTagName("syn");
 
-        String rel = xml.split("<rel>")[1];
-        rel = rel.split("</rel>")[0];
-        String[] relateds = rel.split(" ");
-
-        ArrayList<String> result = new ArrayList<String>();
-        for(String s : synonyms){
-            result.add(s.replaceAll("[^A-Za-z]+", ""));
+        ArrayList<String> synonyms = new ArrayList<>();
+        for (int i = 0; i < nList.getLength(); i++) {
+            Node nNode = nList.item(i);
+            if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element eElement = (Element) nNode;
+                String syn = eElement.getTextContent();
+                syn = syn.replaceAll("\\[.*?\\]", ""); // Removes all instances inside of brackets
+                String[] syns = syn.split("(,|;) ");
+                for (String s : syns) {
+                    synonyms.add(s);
+                }
+            }
         }
-        for(String r : relateds){
-            result.add(r.replaceAll("[^A-Za-z]+", ""));
-        }
-
-        return result;
+        return synonyms;
     }
 
 }
