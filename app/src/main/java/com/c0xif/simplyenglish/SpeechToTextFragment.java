@@ -10,8 +10,8 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.TextView;
 
-public class SpeechToTextFragment extends Fragment {
 
+public class SpeechToTextFragment extends Fragment {
     WebView wv;
 
     //public static SpeechToTextFragment newInstance() {

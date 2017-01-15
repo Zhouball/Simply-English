@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     private Boolean recording;
     private CSampler sampler;
 
-    private boolean visualizerOn = false;
+    private boolean visualizerOn = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,20 +76,20 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
 
         if (visualizerOn) {
-        //super.onCreate (savedInstanceState);
-        //setContentView(R.layout.activity_main);
-        mdrawer = (CDrawer) findViewById(R.id.drawer);
-        m_bStart = Boolean.valueOf(false);
+            //super.onCreate (savedInstanceState);
+            //setContentView(R.layout.activity_main);
+            mdrawer = (CDrawer) findViewById(R.id.drawer);
+            m_bStart = Boolean.valueOf(false);
 
 
-        while (true)
-        {
-            recording = Boolean.valueOf(false);
-            run();
-            System.out.println("mDrawThread NOT NULL");
-            System.out.println("recorder NOT NULL");
-            return;
-        }
+            while (true)
+            {
+                recording = Boolean.valueOf(false);
+                run();
+                System.out.println("mDrawThread NOT NULL");
+                System.out.println("recorder NOT NULL");
+                return;
+            }
         }
 
     }
@@ -361,11 +361,11 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 }
                 if (sampler == null)
                     sampler = new CSampler(this);
-                Context localContext = getApplicationContext();
-                Display localDisplay = getWindowManager().getDefaultDisplay();
-                Toast localToast = Toast.makeText(localContext, "Please make some noise..", Toast.LENGTH_LONG);
-                localToast.setGravity(48, 0, localDisplay.getHeight() / 8);
-                localToast.show();
+                //Context localContext = getApplicationContext();
+                //Display localDisplay = getWindowManager().getDefaultDisplay();
+                //Toast localToast = Toast.makeText(localContext, "Please make some noise..", Toast.LENGTH_LONG);
+                //localToast.setGravity(48, 0, localDisplay.getHeight() / 8);
+                //localToast.show();
                 mdrawer.setOnClickListener(listener);
                 if (sampler != null) {
                     sampler.Init();

@@ -19,7 +19,7 @@
 
     <fragment
         android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="300dp"
         android:layout_alignParentBottom="true"
         class="com.c0xif.simplyenglish.TextToSimpleFragment"
         android:name="android.app.ListFragment"
@@ -29,11 +29,13 @@
     <com.c0xif.simplyenglish.CDrawer
         android:id="@+id/drawer"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
+        android:layout_height="75dp"
         android:soundEffectsEnabled="true"
-        android:visibility="invisible"/>
+        android:layout_below="@+id/s2tFrag"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@+id/t2sFrag" />
 
 </RelativeLayout>
