@@ -9,15 +9,20 @@ package com.c0xif.simplyenglish;
 
 import android.media.AudioRecord;
 import android.media.MediaPlayer;
+import android.os.SystemClock;
 import android.util.Log;
 import com.c0xif.simplyenglish.*;
 
 import java.io.PrintStream;
 
+import edu.cmu.pocketsphinx.SpeechRecognizer;
+
+import static edu.cmu.pocketsphinx.SpeechRecognizer.buffer;
+
 public class CSampler
 {
     private static final int SAMPPERSEC = 44100;
-    private static short[] buffer;
+    //private static short[] buffer;
     private AudioRecord ar;
     private int audioEncoding = 2;
     private int buffersizebytes;
@@ -56,7 +61,17 @@ public class CSampler
         try {
             if (!m_bRun)
             {
-                ar = new AudioRecord(1, 44100, channelConfiguration, audioEncoding, AudioRecord.getMinBufferSize(44100, channelConfiguration, audioEncoding));
+                while (SpeechRecognizer.recorders.size() < 1) {
+                    if (SpeechRecognizer.recorders.size() > 0) {
+                        Log.d("CSampler", "We found it!");
+                        ar = SpeechRecognizer.recorders.get(0);
+                        break;
+                    } else {
+                        Log.d("CSampler", "Couldn't find it :( Gonna nap");
+                        SystemClock.sleep(5000);
+                        ar = new AudioRecord(1, 44100, channelConfiguration, audioEncoding, AudioRecord.getMinBufferSize(44100, channelConfiguration, audioEncoding));
+                    }
+                }
                 if (ar.getState() != 1)
                     return;
                 System.out.println("State initialized");
@@ -67,10 +82,11 @@ public class CSampler
         }
         while (true)
         {
-            buffersizebytes = AudioRecord.getMinBufferSize(44100, channelConfiguration, audioEncoding);
-            buffer = new short[buffersizebytes];
+            //buffersizebytes = AudioRecord.getMinBufferSize(44100, channelConfiguration, audioEncoding);
+            //buffersizebytes = Math.round(44100 * 0.4f);
+            //buffer = new short[buffersizebytes];
             m_bRun = Boolean.valueOf(true);
-            System.out.println("State unitialized!!!");
+            System.out.println("State uninitialized!!!");
             return;
         }
     }
@@ -112,11 +128,16 @@ public class CSampler
     }
 
     /**
-     * Reads the data-bufferts
+     * Reads the data-buffers
      */
     public void Sample()
     {
-        mSamplesRead = ar.read(buffer, 0, buffersizebytes);
+        if (SpeechRecognizer.buffer != null) {
+            mSamplesRead = SpeechRecognizer.buffer.length;
+        }
+        else
+            mSamplesRead = 0;
+        //Log.d("CSampler", "Samples: " + mSamplesRead);
     }
 
 
@@ -173,7 +194,7 @@ public class CSampler
                         return;
                     }
                     Sample();
-                    m_ma.setBuffer(CSampler.buffer);
+                    m_ma.setBuffer(SpeechRecognizer.buffer);
                 }
             }
         };

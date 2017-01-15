@@ -34,8 +34,8 @@ public class CDrawer extends SurfaceView
     private Boolean isCreated = false;
     /**
      * This is where you instance the drawer
-     * You relly don't need to care about the parameters, they are set in the xml-layout
-     * @param Apply the baseContext of you current acitivty
+     * You really don't need to care about the parameters, they are set in the xml-layout
+     * @param Apply the baseContext of you current activity
      * @param AttributeSet
      */
     public CDrawer(Context paramContext, AttributeSet paramAttributeSet)
@@ -224,9 +224,10 @@ public class CDrawer extends SurfaceView
             mLinePaint.setARGB(255, 255, 0, 255);
             mBackPaint = new Paint();
             mBackPaint.setAntiAlias(true);
-            mBackPaint.setARGB(255, 0, 0, 0);
+            mBackPaint.setARGB(255, 255, 255, 255);
             mBuffer = new short[2048];
             mBackgroundImage = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+            //mLinePaint.setStyle(Paint.Style.STROKE);
 
         }
 
@@ -305,6 +306,7 @@ public class CDrawer extends SurfaceView
              */
             while (StratX < width -1)
             {
+                if (scale == 0) scale = 1;
                 int StartBaseY = mBuffer[(mBuffIndex - 1)] / scale;
 
                 int StopBaseY = mBuffer[mBuffIndex] / scale;

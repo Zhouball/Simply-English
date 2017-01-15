@@ -45,7 +45,7 @@ public class ThesaurusAPI {
     }
 
     public ArrayList<String> fetchSynonyms(String word)throws Exception{
-        return parseXML(getXML(word));
+        return parseXML(getXML(word), word);
     }
 
     private String getXML(String word) throws Exception{
@@ -63,7 +63,7 @@ public class ThesaurusAPI {
         return result.toString();
     }
 
-    private ArrayList<String> parseXML(String xml) throws Exception{
+    private ArrayList<String> parseXML(String xml, String word) throws Exception{
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         InputSource is = new InputSource(new StringReader(xml));
@@ -80,7 +80,10 @@ public class ThesaurusAPI {
                 syn = syn.replaceAll("\\[.*?\\]", ""); // Removes all instances inside of brackets
                 String[] syns = syn.split("(,|;) ");
                 for (String s : syns) {
-                    synonyms.add(s);
+                    // Remove redundant translations
+                    if (!s.contains(word)){
+                        synonyms.add(s);
+                    }
                 }
             }
         }
