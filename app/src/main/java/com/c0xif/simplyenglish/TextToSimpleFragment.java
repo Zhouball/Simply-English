@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,7 +27,10 @@ import java.util.Vector;
 public class TextToSimpleFragment extends Fragment {
     public final String TAG = "TTSFrag";
 
+    private int currentRow = 0;
+    private int currentRowWidth = 0;
     private LinearLayout LL;
+    private GridLayout GL[];
     public Button CurrentButton = null;
     private SharedPreferences UserPreferences;
     public HashMap<Button, ArrayList<String>> LocalThesaurus = new HashMap<>();
@@ -43,8 +47,14 @@ public class TextToSimpleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_text_to_simple, container, false);
         LL = (LinearLayout) view.findViewById(R.id.simple_text_space);
+        GL[0] = (GridLayout) view.findViewById(R.id.row_1);
+        GL[1] = (GridLayout) view.findViewById(R.id.row_2);
+        GL[2] = (GridLayout) view.findViewById(R.id.row_3);
+        GL[3] = (GridLayout) view.findViewById(R.id.row_4);
+        GL[4] = (GridLayout) view.findViewById(R.id.row_5);
+        GL[5] = (GridLayout) view.findViewById(R.id.row_6);
+
         initUserPref();
-        //receiveWord("Allen");
         return view;
     }
 
@@ -79,10 +89,18 @@ public class TextToSimpleFragment extends Fragment {
             }
         });
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        GridLayout.LayoutParams lp = new GridLayout().LayoutParams(GridLayout.LayoutParams.WRAP_CONTENT, GridLayout.LayoutParams.WRAP_CONTENT);
 
-        if (LL != null)
-            LL.addView(textButton, lp);
+        if (LL != null) {
+            if (textButton.getX() + textButton.getWidth() + currentRowWidth > LL.getWidth()) {
+                currentRow = (currentRow + 1) % 6;
+                currentRowWidth = 0;
+            } else {
+                currentRowWidth += textButton.getWidth();
+            }
+
+            GL[currentRow].addView(textButton, lp);
+        }
 
     }
 
@@ -144,5 +162,14 @@ public class TextToSimpleFragment extends Fragment {
 
             storeUserPref(values.get(i), (String)bKey.getText());
         }
+    }
+
+    private void clear() {
+        for (GridLayout g: GL) {
+            g.removeAllViewsInLayout();
+        }
+        
+        currentRow = 0;
+        currentRowWidth = 0;
     }
 }
