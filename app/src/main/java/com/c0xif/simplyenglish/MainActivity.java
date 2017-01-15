@@ -1,7 +1,10 @@
 package com.c0xif.simplyenglish;
 
+import android.app.AlertDialog.Builder;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.Manifest;
@@ -321,6 +324,26 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         s2tfrag.updateText("");
         t2sfrag.clear();
         //TODO add edittextbox
+    }
+
+    public void clearHistory(){
+        new AlertDialog.Builder(this)
+                .setTitle("Clear history")
+                .setMessage("Are you sure you want to clear your history? This action will reset all data used for personalized translations.")
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // continue with delete
+                    }
+                })
+                .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do nothing
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+        t2sfrag.clearHist();
+        clear();
     }
 
 
