@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:flexWrap="wrap"
-    app:alignItems="stretch"
-    app:alignContent="stretch" >
+    app:alignItems="flex_start"
+    app:alignContent="flex_start"
+    android:id="@+id/simple_text_space">
 
 </com.google.android.flexbox.FlexboxLayout>

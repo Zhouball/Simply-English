@@ -18,6 +18,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.google.android.flexbox.FlexboxLayout;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -30,7 +33,7 @@ import javax.microedition.khronos.opengles.GL;
 public class TextToSimpleFragment extends Fragment {
     public final String TAG = "TTSFrag";
 
-    private LinearLayout LL;
+    private FlexboxLayout FL;
     public Button CurrentButton = null;
     private SharedPreferences UserPreferences;
     public HashMap<Button, ArrayList<String>> LocalThesaurus = new HashMap<>();
@@ -46,7 +49,7 @@ public class TextToSimpleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_text_to_simple, container, false);
-        LL = (LinearLayout) view.findViewById(R.id.simple_text_space);
+        FL = (FlexboxLayout) view.findViewById(R.id.simple_text_space);
 
         initUserPref();
         return view;
@@ -54,8 +57,15 @@ public class TextToSimpleFragment extends Fragment {
 
     public void receiveWord(String word) {
         String text = getUserPref(word);
-
-        final Button textButton = new Button(this.getContext());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        Button item = (Button) inflater.inflate(R.layout.flexbox_item, FL, false);
+        final Button textButton = (Button) item.findViewById(android.R.id.button1);
+        /*
+        TextView textView = (TextView) item.findViewById(android.R.id.text1);
+        textView.setText(getActivity().getString(R.string.item_default, flexboxLayout.getChildCount()));
+        FlexboxLayout.LayoutParams layoutParams = (FlexboxLayout.LayoutParams) item.getLayoutParams();
+        item.setLayoutParams(layoutParams);
+        */
         final TextToSimpleFragment ttsf = this;
         textButton.setText(text);
 
@@ -83,13 +93,10 @@ public class TextToSimpleFragment extends Fragment {
             }
         });
 
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        FlexboxLayout.LayoutParams lp = (FlexboxLayout.LayoutParams) item.getLayoutParams();
+        item.setLayoutParams(lp);
 
-        LL.addView(textButton, lp);
-
-        if (LL != null) {
-            LL.addView(textButton, lp);
-        }
+        FL.addView(item);
 
     }
 
@@ -154,6 +161,6 @@ public class TextToSimpleFragment extends Fragment {
     }
 
     private void clear() {
-        LL.removeAllViewsInLayout();
+        FL.removeAllViewsInLayout();
     }
 }
