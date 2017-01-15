@@ -18,6 +18,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.google.android.flexbox.FlexboxLayout;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Dictionary;
@@ -25,15 +28,13 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Vector;
 
+import javax.microedition.khronos.opengles.GL;
+
 public class TextToSimpleFragment extends Fragment {
     public final String TAG = "TTSFrag";
 
-    private int currentRow = 0;
-    private int currentRowWidth = 0;
-    private LinearLayout LL;
-    private ArrayList<GridLayout> GL;
+    private FlexboxLayout FL;
     public Button CurrentButton = null;
-    private SharedPreferences UserPreferences;
     public HashMap<Button, ArrayList<String>> LocalThesaurus = new HashMap<>();
 
     public static TextToSimpleFragment newInstance() {
@@ -47,14 +48,7 @@ public class TextToSimpleFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_text_to_simple, container, false);
-        LL = (LinearLayout) view.findViewById(R.id.simple_text_space);
-        GL = new ArrayList<GridLayout>();
-        GL.add((GridLayout) view.findViewById(R.id.row_1));
-        GL.add((GridLayout) view.findViewById(R.id.row_2));
-        GL.add((GridLayout) view.findViewById(R.id.row_3));
-        GL.add((GridLayout) view.findViewById(R.id.row_4));
-        GL.add((GridLayout) view.findViewById(R.id.row_5));
-        GL.add((GridLayout) view.findViewById(R.id.row_6));
+        FL = (FlexboxLayout) view.findViewById(R.id.simple_text_space);
 
         initUserPref();
         return view;
@@ -62,15 +56,22 @@ public class TextToSimpleFragment extends Fragment {
 
     public void receiveWord(String word) {
         String text = getUserPref(word);
-
-        final Button textButton = new Button(this.getContext());
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        Button item = (Button) inflater.inflate(R.layout.flexbox_item, FL, false);
+        final Button textButton = (Button) item.findViewById(android.R.id.button1);
+        /*
+        TextView textView = (TextView) item.findViewById(android.R.id.text1);
+        textView.setText(getActivity().getString(R.string.item_default, flexboxLayout.getChildCount()));
+        FlexboxLayout.LayoutParams layoutParams = (FlexboxLayout.LayoutParams) item.getLayoutParams();
+        item.setLayoutParams(layoutParams);
+        */
         final TextToSimpleFragment ttsf = this;
         textButton.setText(text);
 
         textButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (CurrentButton != null && CurrentButton != textButton)
-                    setPreferences(CurrentButton);
+                if (ttsf.CurrentButton != null && ttsf.CurrentButton != textButton)
+                    ttsf.setPreferences(ttsf.CurrentButton);
 
                 ttsf.CurrentButton = textButton;
 
@@ -91,51 +92,41 @@ public class TextToSimpleFragment extends Fragment {
             }
         });
 
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        FlexboxLayout.LayoutParams lp = (FlexboxLayout.LayoutParams) item.getLayoutParams();
+        item.setLayoutParams(lp);
 
-        GL.get(currentRow).addView(textButton, lp);
-
-        if (LL != null) {
-            if (textButton.getX() + textButton.getWidth() + currentRowWidth > LL.getWidth()) {
-                currentRow = (currentRow + 1) % 6;
-                currentRowWidth = 0;
-            }
-            //Log.d("t2sf", "" + textButton.getWidth() + " " + textButton.getX() + " " + currentRowWidth + " " + currentRow);
-            currentRowWidth += textButton.getWidth();
-
-
-        }
+        FL.addView(item);
 
     }
 
     public void initUserPref() {
-        if (UserPreferences == null)
-            UserPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-
-        if (UserPreferences == null)
-            Log.d(TAG, "Error Loading User Preferences");
     }
 
     public void closeUserPref() {
     }
 
     public String getUserPref(String key) {
-        if (UserPreferences == null) {
+        SharedPreferences userPref = this.getContext().getSharedPreferences("com.c0xif.simplyenglish", Context.MODE_PRIVATE);
+
+        if (userPref == null) {
             Log.d(TAG, "You must initialize the User Preferences first");
             return key;
         }
-
-        return UserPreferences.getString(key, key);
+        Log.d(TAG, key + " IS MAPPED TO " + userPref.getString(key, key));
+        return userPref.getString(key, key);
     }
 
     public void storeUserPref(String key, String value) {
-        SharedPreferences.Editor editor = UserPreferences.edit();
-        if (editor != null) {
-            editor.putString(key, value);
-            editor.commit();
-        } else {
-            Log.d(TAG, "Error when editing User Preferences");
+        SharedPreferences userPref = this.getContext().getSharedPreferences("com.c0xif.simplyenglish", Context.MODE_PRIVATE);
+        if (userPref == null) {
+            Log.d(TAG, "You must initialize the User Preferences first 2");
+            return;
         }
+        Log.d(TAG, "MAPPED " + key + " TO " + value);
+
+        if(userPref.edit().putString(key, value).commit())
+            Log.d(TAG, "SUCCESS!");
+
     }
 
     private String getWordFromSynonymList(ArrayList<String> synonyms, String currentWord) {
@@ -160,7 +151,7 @@ public class TextToSimpleFragment extends Fragment {
             return;
         }
 
-        for (int i = 1; i < values.size(); i++) {
+        for (int i = 0; i < values.size(); i++) {
             if (values.get(i) == bKey.getText())
                 break;
 
@@ -169,11 +160,6 @@ public class TextToSimpleFragment extends Fragment {
     }
 
     private void clear() {
-        for (GridLayout g: GL) {
-            g.removeAllViewsInLayout();
-        }
-
-        currentRow = 0;
-        currentRowWidth = 0;
+        FL.removeAllViewsInLayout();
     }
 }
