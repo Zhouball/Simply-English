@@ -33,6 +33,7 @@ public class SpeechToTextFragment extends Fragment {
 
     public boolean updateText(String s) {
 
+        wv.loadUrl("about:blank");
         wv.loadData(s, "text/html", null);
         return true;
     }
