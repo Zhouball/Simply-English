@@ -168,7 +168,7 @@ public class TextToSimpleFragment extends Fragment {
         for (GridLayout g: GL) {
             g.removeAllViewsInLayout();
         }
-        
+
         currentRow = 0;
         currentRowWidth = 0;
     }

@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     SpeechToTextFragment s2tfrag;
     TextToSimpleFragment t2sfrag;
 
-    StringBuffer actual;
+    StringBuilder actual;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }
         runRecognizerSetup();
 
-        actual = new StringBuffer("");
+        actual = new StringBuilder("");
 
         //getSupportFragmentManager().beginTransaction().replace(R.id.s2tFrag, new SpeechToTextFragment(),"s2tFrag").commit();
         s2tfrag = ((SpeechToTextFragment) getSupportFragmentManager().findFragmentById(R.id.s2tFrag));
@@ -211,5 +211,11 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         }
         //if in t2t state
         actual.append(". ");
+    }
+
+    public void clear() {
+        actual.setLength(0);
+        s2tfrag.updateText("");
+        //TODO clear t2sfrag as well
     }
 }
