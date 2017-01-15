@@ -50,7 +50,6 @@ public class TextToSimpleFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_text_to_simple, container, false);
         FL = (FlexboxLayout) view.findViewById(R.id.simple_text_space);
 
-        initUserPref();
         return view;
     }
 
@@ -99,10 +98,9 @@ public class TextToSimpleFragment extends Fragment {
 
     }
 
-    public void initUserPref() {
-    }
-
-    public void closeUserPref() {
+    public void clearHist() {
+        SharedPreferences userPref = this.getContext().getSharedPreferences("com.c0xif.simplyenglish", Context.MODE_PRIVATE);
+        userPref.edit().clear();
     }
 
     public String getUserPref(String key) {
