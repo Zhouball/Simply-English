@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     SpeechToTextFragment s2tfrag;
     TextToSimpleFragment t2sfrag;
 
+    StringBuilder actual;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             return;
         }
         runRecognizerSetup();
+
+        actual = new StringBuilder("");
 
         //getSupportFragmentManager().beginTransaction().replace(R.id.s2tFrag, new SpeechToTextFragment(),"s2tFrag").commit();
         s2tfrag = ((SpeechToTextFragment) getSupportFragmentManager().findFragmentById(R.id.s2tFrag));
@@ -133,7 +138,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         if (hypothesis != null) {
             String text = hypothesis.getHypstr();
             makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-            s2tfrag.addText(text + ". ");
+            //actual.append(text + ". ");
+            processWords(text);
         }
     }
 
@@ -194,4 +200,22 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         //switchSearch(KWS_SEARCH);
     }
 
+    public void processWords(String s) {
+        Log.d("MainActivity","processing stuffz");
+        String[] words = s.split(" ");
+        //if in s2t state
+        for (String word : words) {
+            actual.append(" " + word);
+            s2tfrag.updateText("<span style=\"background-color:#f9f03b;\">" + actual.toString() + "</span>");
+            t2sfrag.receiveWord(word);
+        }
+        //if in t2t state
+        actual.append(". ");
+    }
+
+    public void clear() {
+        actual.setLength(0);
+        s2tfrag.updateText("");
+        //TODO clear t2sfrag as well
+    }
 }
