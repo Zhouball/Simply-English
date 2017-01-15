@@ -183,6 +183,12 @@ public class CDrawer extends SurfaceView
         }
     }
 
+    @Override
+    public void setVisibility(int visibility) {
+        
+    }
+
+
     /**
      * The Drawer Thread, subclass to cDrawer class
      * We want to keep most of this process in a background thread,

@@ -48,7 +48,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     SpeechToTextFragment s2tfrag;
     TextToSimpleFragment t2sfrag;
-    TextToTextFragment t2tfrag;
 
     StringBuilder actual;
     private CDrawer.CDrawThread mDrawThread;
@@ -85,7 +84,66 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         //getSupportFragmentManager().beginTransaction().replace(R.id.t2sFrag, new TextToSimpleFragment(),"t2sFrag").commit();
         t2sfrag = ((TextToSimpleFragment) fm.findFragmentById(R.id.t2sFrag));
 
-        t2tfrag = ((TextToTextFragment) fm.findFragmentById(R.id.t2tFrag));
+        //t2tfrag = ((TextToTextFragment) fm.findFragmentById(R.id.t2tFrag));
+
+        /*
+        fm.beginTransaction()
+                .hide(s2tfrag)
+                .commit();
+        fm.beginTransaction()
+                .hide(t2sfrag)
+                .commit();
+                */
+
+        Button submit = (Button) findViewById(R.id.submit);
+        
+
+        switch1 = (Button) findViewById(R.id.switch1);
+        Log.d("SwitchButton", switch1.toString());
+        if (speech) {
+            switch1.setText("Speech");
+        } else switch1.setText("Text");
+
+        switch1.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.d("SwitchButton", "Button clicked");
+
+                if(!speech) {
+                    Log.d("SwitchButton", "Text clicked");
+                    switch1.setText("Speech");
+
+                    fm.beginTransaction()
+                            .show(s2tfrag)
+                            .commit();
+
+                    //mdrawer.setVisibility(View.VISIBLE);
+                    speech = true;
+                } else {
+                    Log.d("SwitchButton", "Speech clicked");
+                    switch1.setText("Text");
+
+                    fm.beginTransaction()
+                            .hide(s2tfrag)
+                            .commit();
+
+                    //mdrawer.setVisibility(View.GONE);
+                    speech = false;
+                }
+
+            }
+        });
+
+        Button clearer = (Button) findViewById(R.id.clear);
+        clearer.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Log.d("ClearButton", "Clearing");
+                clear();
+            }
+        });
 
         if (visualizerOn) {
             //super.onCreate (savedInstanceState);
@@ -103,55 +161,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 return;
             }
         }
-
-        fm.beginTransaction()
-                .hide(t2tfrag)
-                .commit();
-
-        /*
-        fm.beginTransaction()
-                .hide(s2tfrag)
-                .commit();
-        fm.beginTransaction()
-                .hide(t2sfrag)
-                .commit();
-                */
-
-        switch1 = (Button) findViewById(R.id.switch1);
-        if (speech) {
-            switch1.setText("Speech");
-        } else switch1.setText("Text");
-
-        switch1.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Log.d("SwitchButton", "Button clicked");
-
-                if(!speech) {
-                    //switch1.setText("Speech");
-                    fm.beginTransaction()
-                            .hide(t2tfrag)
-                            .commit();
-                    fm.beginTransaction()
-                            .show(s2tfrag)
-                            .commit();
-                    mdrawer.setVisibility(View.VISIBLE);
-                    speech = true;
-                } else {
-                    //switch1.setText("Text");
-                    fm.beginTransaction()
-                            .hide(s2tfrag)
-                            .commit();
-                    mdrawer.setVisibility(View.INVISIBLE);
-                    fm.beginTransaction()
-                            .show(t2tfrag)
-                            .commit();
-                    speech = false;
-                }
-
-            }
-        });
 
     }
 
@@ -214,8 +223,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
      */
     @Override
     public void onPartialResult(Hypothesis hypothesis) {
-        if (hypothesis == null)
-            return;
+        //if (hypothesis == null)
+        //    return;
 
         //String text = hypothesis.getHypstr();
         //((TextView) findViewById(R.id.caption_text)).setText(text);
@@ -226,11 +235,13 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
      */
     @Override
     public void onResult(Hypothesis hypothesis) {
-        if (hypothesis != null) {
-            String text = hypothesis.getHypstr();
-            makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
-            //actual.append(text + ". ");
-            processWords(text);
+        if (speech) {
+            if (hypothesis != null) {
+                String text = hypothesis.getHypstr();
+                //makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+                //actual.append(text + ". ");
+                processWords(text);
+            }
         }
     }
 
@@ -308,7 +319,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     public void clear() {
         actual.setLength(0);
         s2tfrag.updateText("");
-        //TODO clear t2sfrag as well
+        t2sfrag.clear();
+        //TODO add edittextbox
     }
 
 
@@ -446,5 +458,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             }
         }
     }
+
 
 }

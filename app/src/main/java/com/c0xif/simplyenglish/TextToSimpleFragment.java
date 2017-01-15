@@ -170,7 +170,7 @@ public class TextToSimpleFragment extends Fragment {
         }
     }
 
-    private void clear() {
+    public void clear() {
         FL.removeAllViewsInLayout();
     }
 }
