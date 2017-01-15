@@ -14,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Display;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
     SpeechToTextFragment s2tfrag;
     TextToSimpleFragment t2sfrag;
+    EditText t2tbox;
 
     StringBuilder actual;
     private CDrawer.CDrawThread mDrawThread;
@@ -94,9 +96,16 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 .hide(t2sfrag)
                 .commit();
                 */
+        t2tbox = (EditText) findViewById(R.id.editText);
+        final Button submit = (Button) findViewById(R.id.submit);
 
-        Button submit = (Button) findViewById(R.id.submit);
-        
+        submit.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                processWords(t2tbox.getText().toString());
+            }
+        });
 
         switch1 = (Button) findViewById(R.id.switch1);
         Log.d("SwitchButton", switch1.toString());
@@ -114,9 +123,16 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     Log.d("SwitchButton", "Text clicked");
                     switch1.setText("Speech");
 
+                    clear();
+
+                    submit.setVisibility(View.GONE);
+                    t2tbox.setVisibility(View.GONE);
+
                     fm.beginTransaction()
                             .show(s2tfrag)
                             .commit();
+
+
 
                     //mdrawer.setVisibility(View.VISIBLE);
                     speech = true;
@@ -124,9 +140,14 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                     Log.d("SwitchButton", "Speech clicked");
                     switch1.setText("Text");
 
+                    clear();
+
                     fm.beginTransaction()
                             .hide(s2tfrag)
                             .commit();
+
+                    submit.setVisibility(View.VISIBLE);
+                    t2tbox.setVisibility(View.VISIBLE);
 
                     //mdrawer.setVisibility(View.GONE);
                     speech = false;
@@ -320,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         actual.setLength(0);
         s2tfrag.updateText("");
         t2sfrag.clear();
-        //TODO add edittextbox
+        t2tbox.setText("");
     }
 
 
