@@ -11,7 +11,7 @@
 
     <fragment
         android:layout_width="match_parent"
-        android:layout_height="160dp"
+        android:layout_height="100dp"
         android:layout_alignParentTop="true"
         class="com.c0xif.simplyenglish.SpeechToTextFragment"
         android:name="android.app.ListFragment"
@@ -19,7 +19,7 @@
 
     <fragment
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="360dp"
         android:layout_alignParentBottom="true"
         class="com.c0xif.simplyenglish.TextToSimpleFragment"
         android:name="android.app.ListFragment"

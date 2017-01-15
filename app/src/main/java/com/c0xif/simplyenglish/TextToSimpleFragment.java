@@ -34,7 +34,7 @@ public class TextToSimpleFragment extends Fragment {
     public final String TAG = "TTSFrag";
 
     private FlexboxLayout FL;
-    private ThesaurusAPI OnlineThesaurus;
+    private ThesaurusAPI OnlineThesaurus = new ThesaurusAPI();
     public Button CurrentButton = null;
     public HashMap<Button, ArrayList<String>> LocalThesaurus = new HashMap<>();
 
@@ -50,7 +50,6 @@ public class TextToSimpleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_text_to_simple, container, false);
         FL = (FlexboxLayout) view.findViewById(R.id.simple_text_space);
-
         return view;
     }
 
@@ -80,17 +79,20 @@ public class TextToSimpleFragment extends Fragment {
                 if (synonyms != null) {
                     textButton.setText(ttsf.getWordFromSynonymList(synonyms, textButton));
                 } else {
+                    ArrayList<String> toInsert = new ArrayList<String>();
+                    toInsert.add((String) textButton.getText());
                     try {
-                        ArrayList<String> toInsert = new ArrayList<String>();
-                        toInsert.add((String) textButton.getText());
                         toInsert.addAll(OnlineThesaurus.fetchSynonyms((String) textButton.getText()));
-                        ttsf.LocalThesaurus.put(textButton, toInsert);
-                        synonyms = toInsert;
-                        textButton.setText(ttsf.getWordFromSynonymList(synonyms, textButton));
                     }
                     catch (Exception e){
                         Log.d(TAG, e + ": PAUSIBLE HTTP GET REQUEST ISSUE");
                     }
+                    for (String s:toInsert) {
+                        Log.d(TAG, s);
+                    }
+                    ttsf.LocalThesaurus.put(textButton, toInsert);
+                    synonyms = toInsert;
+                    textButton.setText(ttsf.getWordFromSynonymList(synonyms, textButton));
                 }
             }
         });
@@ -103,8 +105,10 @@ public class TextToSimpleFragment extends Fragment {
     }
 
     public void clearHist() {
-        SharedPreferences userPref = this.getContext().getSharedPreferences("com.c0xif.simplyenglish", Context.MODE_PRIVATE);
-        userPref.edit().clear();
+        SharedPreferences preferences = this.getContext().getSharedPreferences("com.c0xif.simplyenglish", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
     }
 
     public String getUserPref(String key) {
