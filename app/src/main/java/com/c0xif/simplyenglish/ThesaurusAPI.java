@@ -4,6 +4,7 @@ package com.c0xif.simplyenglish;
 import java.util.ArrayList;
 import java.io.*;
 import java.net.*;
+import android.os.StrictMode;
 
 // For XML parsing
 import java.io.File;
@@ -17,17 +18,19 @@ import org.xml.sax.InputSource;
 
 public class ThesaurusAPI {
 
-    final String intermediateKey = "4c87d5ff-0704-4fcc-9ffb-578ef8ac378c";
-    final String intermediateURL = "http://www.dictionaryapi.com/api/v1/references/ithesaurus/xml/";
-    final String collegiateKey = "b1ddcb1e-2725-46d4-9091-565d5ff9fc89";
-    final String collegiateURL = "http://www.dictionaryapi.com/api/v1/references/thesaurus/xml/";
+    private final String intermediateKey = "4c87d5ff-0704-4fcc-9ffb-578ef8ac378c";
+    private final String intermediateURL = "http://www.dictionaryapi.com/api/v1/references/ithesaurus/xml/";
+    private final String collegiateKey = "b1ddcb1e-2725-46d4-9091-565d5ff9fc89";
+    private final String collegiateURL = "http://www.dictionaryapi.com/api/v1/references/thesaurus/xml/";
 
-    String key;
-    String url;
+    private String key;
+    private String url;
 
     public ThesaurusAPI(){
         key = intermediateKey;
         url = intermediateURL;
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     public ThesaurusAPI(boolean intermediate){
@@ -35,7 +38,7 @@ public class ThesaurusAPI {
             key = intermediateKey;
             url = intermediateURL;
         }
-        else{
+        else {
             key = collegiateKey;
             url = collegiateURL;
         }
@@ -51,12 +54,12 @@ public class ThesaurusAPI {
         URL u = new URL(call);
         HttpURLConnection conn = (HttpURLConnection) u.openConnection();
         conn.setRequestMethod("GET");
-        BufferedReader r = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+        BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         String line;
-        while((line = r.readLine()) != null){
+        while((line = rd.readLine()) != null){
             result.append(line);
         }
-        r.close();
+        rd.close();
         return result.toString();
     }
 
