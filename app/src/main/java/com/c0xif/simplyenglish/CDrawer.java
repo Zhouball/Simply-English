@@ -8,18 +8,13 @@ package com.c0xif.simplyenglish;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
-import java.io.PrintStream;
-import java.util.Arrays;
 
 public class CDrawer extends SurfaceView
 
@@ -185,7 +180,7 @@ public class CDrawer extends SurfaceView
 
     @Override
     public void setVisibility(int visibility) {
-        
+
     }
 
 

@@ -1,30 +1,22 @@
 package com.c0xif.simplyenglish;
 
-import android.app.AlertDialog.Builder;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.Manifest;
-import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.Display;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 
 import edu.cmu.pocketsphinx.Assets;
 import edu.cmu.pocketsphinx.Hypothesis;
@@ -33,10 +25,6 @@ import edu.cmu.pocketsphinx.SpeechRecognizer;
 import edu.cmu.pocketsphinx.SpeechRecognizerSetup;
 
 import android.view.View;
-import android.widget.TextView;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ToggleButton;
 
 import static android.widget.Toast.makeText;
 
@@ -106,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
             @Override
             public void onClick(View v) {
+                t2sfrag.clear();
                 processWords(t2tbox.getText().toString());
             }
         });
@@ -139,6 +128,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
                     //mdrawer.setVisibility(View.VISIBLE);
                     speech = true;
+
+                    recognizer.startListening(NGRAM_SEARCH);
                 } else {
                     Log.d("SwitchButton", "Speech clicked");
                     switch1.setText("Text");
@@ -154,6 +145,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
 
                     //mdrawer.setVisibility(View.GONE);
                     speech = false;
+
+                    recognizer.stop();
                 }
 
             }
@@ -166,6 +159,16 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
             public void onClick(View v) {
                 Log.d("ClearButton", "Clearing");
                 clear();
+            }
+        });
+
+        Button clearhist = (Button) findViewById(R.id.clearhist);
+        clearhist.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+                clearHistory();
             }
         });
 
@@ -353,7 +356,8 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 .setMessage("Are you sure you want to clear your history? This action will reset all data used for personalized translations.")
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // continue with delete
+                        t2sfrag.clearHist();
+                        clear();
                     }
                 })
                 .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
@@ -363,8 +367,6 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
                 })
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
-        t2sfrag.clearHist();
-        clear();
     }
 
 

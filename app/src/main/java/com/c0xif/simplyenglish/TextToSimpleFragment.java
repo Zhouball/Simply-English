@@ -3,32 +3,18 @@ package com.c0xif.simplyenglish;
 
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.app.ActionBar;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Debug;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.GridLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-
 import com.google.android.flexbox.FlexboxLayout;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Vector;
-
-import javax.microedition.khronos.opengles.GL;
 
 public class TextToSimpleFragment extends Fragment {
     public final String TAG = "TTSFrag";
