@@ -35,7 +35,6 @@ public class TextToSimpleFragment extends Fragment {
 
     private FlexboxLayout FL;
     public Button CurrentButton = null;
-    private SharedPreferences UserPreferences;
     public HashMap<Button, ArrayList<String>> LocalThesaurus = new HashMap<>();
 
     public static TextToSimpleFragment newInstance() {
@@ -71,8 +70,8 @@ public class TextToSimpleFragment extends Fragment {
 
         textButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (CurrentButton != null && CurrentButton != textButton)
-                    setPreferences(CurrentButton);
+                if (ttsf.CurrentButton != null && ttsf.CurrentButton != textButton)
+                    ttsf.setPreferences(ttsf.CurrentButton);
 
                 ttsf.CurrentButton = textButton;
 
@@ -101,33 +100,33 @@ public class TextToSimpleFragment extends Fragment {
     }
 
     public void initUserPref() {
-        if (UserPreferences == null)
-            UserPreferences = getActivity().getPreferences(Context.MODE_PRIVATE);
-
-        if (UserPreferences == null)
-            Log.d(TAG, "Error Loading User Preferences");
     }
 
     public void closeUserPref() {
     }
 
     public String getUserPref(String key) {
-        if (UserPreferences == null) {
+        SharedPreferences userPref = this.getContext().getSharedPreferences("com.c0xif.simplyenglish", Context.MODE_PRIVATE);
+
+        if (userPref == null) {
             Log.d(TAG, "You must initialize the User Preferences first");
             return key;
         }
-
-        return UserPreferences.getString(key, key);
+        Log.d(TAG, key + " IS MAPPED TO " + userPref.getString(key, key));
+        return userPref.getString(key, key);
     }
 
     public void storeUserPref(String key, String value) {
-        SharedPreferences.Editor editor = UserPreferences.edit();
-        if (editor != null) {
-            editor.putString(key, value);
-            editor.commit();
-        } else {
-            Log.d(TAG, "Error when editing User Preferences");
+        SharedPreferences userPref = this.getContext().getSharedPreferences("com.c0xif.simplyenglish", Context.MODE_PRIVATE);
+        if (userPref == null) {
+            Log.d(TAG, "You must initialize the User Preferences first 2");
+            return;
         }
+        Log.d(TAG, "MAPPED " + key + " TO " + value);
+
+        if(userPref.edit().putString(key, value).commit())
+            Log.d(TAG, "SUCCESS!");
+
     }
 
     private String getWordFromSynonymList(ArrayList<String> synonyms, String currentWord) {
@@ -152,7 +151,7 @@ public class TextToSimpleFragment extends Fragment {
             return;
         }
 
-        for (int i = 1; i < values.size(); i++) {
+        for (int i = 0; i < values.size(); i++) {
             if (values.get(i) == bKey.getText())
                 break;
 

@@ -1,5 +1,6 @@
 package com.c0xif.simplyenglish;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.Manifest;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.Display;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,7 +44,15 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
     TextToSimpleFragment t2sfrag;
 
     StringBuilder actual;
+    private CDrawer.CDrawThread mDrawThread;
+    private CDrawer mdrawer;
 
+    private View.OnClickListener listener;
+    private Boolean m_bStart = Boolean.valueOf(false);
+    private Boolean recording;
+    private CSampler sampler;
+
+    private boolean visualizerOn = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,6 +72,26 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         s2tfrag = ((SpeechToTextFragment) getSupportFragmentManager().findFragmentById(R.id.s2tFrag));
         //getSupportFragmentManager().beginTransaction().replace(R.id.t2sFrag, new TextToSimpleFragment(),"t2sFrag").commit();
         t2sfrag = ((TextToSimpleFragment) getSupportFragmentManager().findFragmentById(R.id.t2sFrag));
+
+
+
+        if (visualizerOn) {
+        //super.onCreate (savedInstanceState);
+        //setContentView(R.layout.activity_main);
+        mdrawer = (CDrawer) findViewById(R.id.drawer);
+        m_bStart = Boolean.valueOf(false);
+
+
+        while (true)
+        {
+            recording = Boolean.valueOf(false);
+            run();
+            System.out.println("mDrawThread NOT NULL");
+            System.out.println("recorder NOT NULL");
+            return;
+        }
+        }
+
     }
 
     private void runRecognizerSetup() {
@@ -219,4 +249,135 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         s2tfrag.updateText("");
         //TODO clear t2sfrag as well
     }
+
+
+
+    /**
+     * Pause the visualizer when the app is paused
+     */
+    @Override
+    protected void onPause()
+    {
+        if (visualizerOn) {
+            System.out.println("onpause");
+            sampler.SetRun(Boolean.valueOf(false));
+            mDrawThread.setRun(Boolean.valueOf(false));
+            sampler.SetSleeping(Boolean.valueOf(true));
+            mDrawThread.SetSleeping(Boolean.valueOf(true));
+            Boolean.valueOf(false);
+        }
+        super.onPause();
+
+    }
+    /**
+     * Resters the visualizer when the app restarts
+     */
+    @Override
+    protected void onRestart()
+    {
+        if (visualizerOn) {
+            m_bStart = Boolean.valueOf(true);
+            System.out.println("onRestart");
+        }
+        super.onRestart();
+    }
+    /**
+     * Resume the visualizer when the app resumes
+     */
+    @Override
+    protected void onResume()
+    {
+        if (visualizerOn) {
+            System.out.println("onresume");
+            int i = 0;
+            while (true) {
+                if ((sampler.GetDead2().booleanValue()) && (mdrawer.GetDead2().booleanValue())) {
+                    System.out.println(sampler.GetDead2() + ", " + mdrawer.GetDead2());
+                    sampler.Restart();
+                    if (!m_bStart.booleanValue())
+                        mdrawer.Restart(Boolean.valueOf(true));
+                    sampler.SetSleeping(Boolean.valueOf(false));
+                    mDrawThread.SetSleeping(Boolean.valueOf(false));
+                    m_bStart = Boolean.valueOf(false);
+                    super.onResume();
+                    return;
+                }
+                try {
+                    Thread.sleep(500L);
+                    System.out.println("Hang on..");
+                    i++;
+                    if (!sampler.GetDead2().booleanValue())
+                        System.out.println("sampler not DEAD!!!");
+                    if (!mdrawer.GetDead2().booleanValue()) {
+                        System.out.println("mDrawer not DeAD!!");
+                        mdrawer.SetRun(Boolean.valueOf(false));
+                    }
+                    if (i <= 4)
+                        continue;
+                    mDrawThread.SetDead2(Boolean.valueOf(true));
+                } catch (InterruptedException localInterruptedException) {
+                    localInterruptedException.printStackTrace();
+                }
+            }
+        } else {
+            super.onResume();
+        }
+    }
+
+    @Override
+    protected void onStart()
+    {
+        System.out.println("onstart");
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop()
+    {
+        System.out.println("onstop");
+        super.onStop();
+    }
+
+
+    /**
+     * Recives the buffert from the sampler
+     * @param buffert
+     */
+    public void setBuffer(short[] paramArrayOfShort)
+    {
+        mDrawThread = mdrawer.getThread();
+        mDrawThread.setBuffer(paramArrayOfShort);
+    }
+
+    /**
+     * Called by OnCreate to get everything up and running
+     */
+    public void run()
+    {
+        if (visualizerOn) {
+            try {
+                if (mDrawThread == null) {
+                    mDrawThread = mdrawer.getThread();
+                }
+                if (sampler == null)
+                    sampler = new CSampler(this);
+                Context localContext = getApplicationContext();
+                Display localDisplay = getWindowManager().getDefaultDisplay();
+                Toast localToast = Toast.makeText(localContext, "Please make some noise..", Toast.LENGTH_LONG);
+                localToast.setGravity(48, 0, localDisplay.getHeight() / 8);
+                localToast.show();
+                mdrawer.setOnClickListener(listener);
+                if (sampler != null) {
+                    sampler.Init();
+                    sampler.StartRecording();
+                    sampler.StartSampling();
+                }
+            } catch (NullPointerException e) {
+                Log.e("Main_Run", "NullPointer: " + e.getMessage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

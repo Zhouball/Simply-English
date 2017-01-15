@@ -26,4 +26,14 @@
         android:id="@+id/t2sFrag"
         android:layout_gravity="center_horizontal" />
 
+    <com.c0xif.simplyenglish.CDrawer
+        android:id="@+id/drawer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:soundEffectsEnabled="true"
+        android:visibility="invisible"/>
+
 </RelativeLayout>
