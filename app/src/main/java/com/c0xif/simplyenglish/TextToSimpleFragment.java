@@ -25,13 +25,12 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Vector;
 
+import javax.microedition.khronos.opengles.GL;
+
 public class TextToSimpleFragment extends Fragment {
     public final String TAG = "TTSFrag";
 
-    private int currentRow = 0;
-    private int currentRowWidth = 0;
     private LinearLayout LL;
-    private ArrayList<GridLayout> GL;
     public Button CurrentButton = null;
     private SharedPreferences UserPreferences;
     public HashMap<Button, ArrayList<String>> LocalThesaurus = new HashMap<>();
@@ -48,13 +47,6 @@ public class TextToSimpleFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_text_to_simple, container, false);
         LL = (LinearLayout) view.findViewById(R.id.simple_text_space);
-        GL = new ArrayList<GridLayout>();
-        GL.add((GridLayout) view.findViewById(R.id.row_1));
-        GL.add((GridLayout) view.findViewById(R.id.row_2));
-        GL.add((GridLayout) view.findViewById(R.id.row_3));
-        GL.add((GridLayout) view.findViewById(R.id.row_4));
-        GL.add((GridLayout) view.findViewById(R.id.row_5));
-        GL.add((GridLayout) view.findViewById(R.id.row_6));
 
         initUserPref();
         return view;
@@ -91,19 +83,12 @@ public class TextToSimpleFragment extends Fragment {
             }
         });
 
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-        GL.get(currentRow).addView(textButton, lp);
+        LL.addView(textButton, lp);
 
         if (LL != null) {
-            if (textButton.getX() + textButton.getWidth() + currentRowWidth > LL.getWidth()) {
-                currentRow = (currentRow + 1) % 6;
-                currentRowWidth = 0;
-            }
-            //Log.d("t2sf", "" + textButton.getWidth() + " " + textButton.getX() + " " + currentRowWidth + " " + currentRow);
-            currentRowWidth += textButton.getWidth();
-
-
+            LL.addView(textButton, lp);
         }
 
     }
@@ -169,11 +154,6 @@ public class TextToSimpleFragment extends Fragment {
     }
 
     private void clear() {
-        for (GridLayout g: GL) {
-            g.removeAllViewsInLayout();
-        }
-
-        currentRow = 0;
-        currentRowWidth = 0;
+        LL.removeAllViewsInLayout();
     }
 }
