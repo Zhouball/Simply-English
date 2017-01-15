@@ -34,6 +34,7 @@ public class TextToSimpleFragment extends Fragment {
     public final String TAG = "TTSFrag";
 
     private FlexboxLayout FL;
+    private ThesaurusAPI OnlineThesaurus;
     public Button CurrentButton = null;
     public HashMap<Button, ArrayList<String>> LocalThesaurus = new HashMap<>();
 
@@ -77,16 +78,19 @@ public class TextToSimpleFragment extends Fragment {
                 ArrayList<String> synonyms = ttsf.LocalThesaurus.get(textButton);
 
                 if (synonyms != null) {
-                    textButton.setText(ttsf.getWordFromSynonymList(synonyms, (String) textButton.getText()));
+                    textButton.setText(ttsf.getWordFromSynonymList(synonyms, textButton));
                 } else {
-                    ArrayList<String> toInsert = new ArrayList<String>();
-                    toInsert.add((String)textButton.getText());
-                    // TODO:  Fetch the thesaurus API info and set mSynonyms.
-                    toInsert.add("Zhouball");
-                    toInsert.add("Zhou");
-                    ttsf.LocalThesaurus.put(textButton, toInsert);
-                    synonyms = toInsert;
-                    textButton.setText(ttsf.getWordFromSynonymList(synonyms, (String) textButton.getText()));
+                    try {
+                        ArrayList<String> toInsert = new ArrayList<String>();
+                        toInsert.add((String) textButton.getText());
+                        toInsert.addAll(OnlineThesaurus.fetchSynonyms((String) textButton.getText()));
+                        ttsf.LocalThesaurus.put(textButton, toInsert);
+                        synonyms = toInsert;
+                        textButton.setText(ttsf.getWordFromSynonymList(synonyms, textButton));
+                    }
+                    catch (Exception e){
+                        Log.d(TAG, e + ": PAUSIBLE HTTP GET REQUEST ISSUE");
+                    }
                 }
             }
         });
@@ -127,18 +131,23 @@ public class TextToSimpleFragment extends Fragment {
 
     }
 
-    private String getWordFromSynonymList(ArrayList<String> synonyms, String currentWord) {
+    private String getWordFromSynonymList(ArrayList<String> synonyms, Button currentButton) {
         if (synonyms == null) {
             Log.d(TAG, "Error, Synonym List is null");
-            return currentWord;
+            return (String)currentButton.getText();
+        }
+
+        if (synonyms.size() == 1) {
+            currentButton.animate();
+            return (String)currentButton.getText();
         }
 
         for(int i = 0; i < synonyms.size(); i++) {
-            if(synonyms.get(i) == currentWord)
+            if(synonyms.get(i) == currentButton.getText())
                 return synonyms.get((i + 1) % synonyms.size());
         }
 
-        return currentWord;
+        return (String)currentButton.getText();
     }
 
     private void setPreferences(Button bKey) {
