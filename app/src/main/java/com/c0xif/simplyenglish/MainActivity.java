@@ -206,6 +206,7 @@ public class MainActivity extends AppCompatActivity implements RecognitionListen
         //if in s2t state
         for (String word : words) {
             actual.append(" " + word);
+            Log.d("MainActivity", actual.toString());
             s2tfrag.updateText("<span style=\"background-color:#f9f03b;\">" + actual.toString() + "</span>");
             t2sfrag.receiveWord(word);
         }
